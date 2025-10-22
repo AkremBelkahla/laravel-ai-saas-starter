@@ -1,0 +1,309 @@
+openapi: 3.0.0
+info:
+  title: Laravel AI SaaS Starter API
+  description: API pour la génération de contenu IA (texte et images)
+  version: 1.0.0
+  contact:
+    name: Akrem Belkahla
+    email: akrem.belkahla@infinityweb.tn
+    url: https://infinityweb.tn
+
+servers:
+  - url: http://localhost/api/v1
+    description: Développement local
+  - url: https://api.example.com/v1
+    description: Production
+
+security:
+  - BearerAuth: []
+
+paths:
+  /generate-text:
+    post:
+      summary: Générer du texte
+      description: Génère du texte via OpenAI GPT-4
+      tags:
+        - Text Generation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - prompt
+              properties:
+                prompt:
+                  type: string
+                  minLength: 10
+                  maxLength: 5000
+                  description: Le prompt de génération
+                  example: "Write a blog post about artificial intelligence"
+                options:
+                  type: object
+                  properties:
+                    max_tokens:
+                      type: integer
+                      minimum: 50
+                      maximum: 4000
+                      default: 2000
+                      description: Nombre maximum de tokens
+                    temperature:
+                      type: number
+                      minimum: 0
+                      maximum: 2
+                      default: 0.7
+                      description: Créativité (0 = déterministe, 2 = très créatif)
+                    system:
+                      type: string
+                      maxLength: 1000
+                      description: Message système pour définir le comportement
+                      example: "You are a helpful assistant"
+      responses:
+        '201':
+          description: Job créé avec succès
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      job_id:
+                        type: integer
+                        example: 123
+                      status:
+                        type: string
+                        enum: [pending, processing, completed, failed]
+                        example: pending
+                      estimated_cost:
+                        type: integer
+                        description: Coût estimé en crédits
+                        example: 200
+        '422':
+          description: Validation échouée
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Rate limit dépassé
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /generate-image:
+    post:
+      summary: Générer des images
+      description: Génère des images via DALL-E 3
+      tags:
+        - Image Generation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - prompt
+              properties:
+                prompt:
+                  type: string
+                  minLength: 10
+                  maxLength: 1000
+                  description: Description de l'image à générer
+                  example: "A futuristic city at sunset, cyberpunk style"
+                options:
+                  type: object
+                  properties:
+                    n:
+                      type: integer
+                      minimum: 1
+                      maximum: 4
+                      default: 1
+                      description: Nombre d'images à générer
+                    size:
+                      type: string
+                      enum: [256x256, 512x512, 1024x1024, 1024x1792, 1792x1024]
+                      default: 1024x1024
+                      description: Taille de l'image
+                    quality:
+                      type: string
+                      enum: [standard, hd]
+                      default: standard
+                      description: Qualité de l'image
+                    style:
+                      type: string
+                      enum: [vivid, natural]
+                      default: vivid
+                      description: Style de l'image
+      responses:
+        '201':
+          description: Job créé avec succès
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      job_id:
+                        type: integer
+                        example: 456
+                      status:
+                        type: string
+                        example: pending
+                      estimated_cost:
+                        type: integer
+                        description: Coût estimé en crédits
+                        example: 100
+        '422':
+          description: Validation échouée
+        '429':
+          description: Rate limit dépassé
+
+  /jobs:
+    get:
+      summary: Liste des jobs
+      description: Récupère la liste des jobs de génération
+      tags:
+        - Jobs
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+          description: Numéro de page
+      responses:
+        '200':
+          description: Liste des jobs
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Job'
+                      current_page:
+                        type: integer
+                      total:
+                        type: integer
+
+  /jobs/{id}:
+    get:
+      summary: Détails d'un job
+      description: Récupère les détails d'un job spécifique
+      tags:
+        - Jobs
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: ID du job
+      responses:
+        '200':
+          description: Détails du job
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/Job'
+        '404':
+          description: Job non trouvé
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: API Key
+      description: Clé API à générer depuis le dashboard
+
+  schemas:
+    Job:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 123
+        type:
+          type: string
+          enum: [text, image]
+          example: text
+        status:
+          type: string
+          enum: [pending, processing, completed, failed]
+          example: completed
+        prompt:
+          type: string
+          example: "Write a blog post about AI"
+        result:
+          oneOf:
+            - type: string
+            - type: array
+              items:
+                type: object
+          description: Résultat de la génération (texte ou URLs d'images)
+        tokens_used:
+          type: integer
+          nullable: true
+          example: 1500
+        actual_cost:
+          type: integer
+          nullable: true
+          example: 150
+        model:
+          type: string
+          nullable: true
+          example: gpt-4-turbo-preview
+        error:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+        completed_at:
+          type: string
+          format: date-time
+          nullable: true
+
+    Error:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        message:
+          type: string
+          example: Validation error
+        errors:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
