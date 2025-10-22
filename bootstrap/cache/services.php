@@ -39,8 +39,9 @@
     35 => 'Pest\\Laravel\\PestServiceProvider',
     36 => 'Spatie\\Permission\\PermissionServiceProvider',
     37 => 'Spatie\\QueryBuilder\\QueryBuilderServiceProvider',
-    38 => 'App\\Providers\\AppServiceProvider',
-    39 => 'App\\Providers\\HorizonServiceProvider',
+    38 => 'Tighten\\Ziggy\\ZiggyServiceProvider',
+    39 => 'App\\Providers\\AppServiceProvider',
+    40 => 'App\\Providers\\HorizonServiceProvider',
   ),
   'eager' => 
   array (
@@ -64,8 +65,9 @@
     17 => 'Pest\\Laravel\\PestServiceProvider',
     18 => 'Spatie\\Permission\\PermissionServiceProvider',
     19 => 'Spatie\\QueryBuilder\\QueryBuilderServiceProvider',
-    20 => 'App\\Providers\\AppServiceProvider',
-    21 => 'App\\Providers\\HorizonServiceProvider',
+    20 => 'Tighten\\Ziggy\\ZiggyServiceProvider',
+    21 => 'App\\Providers\\AppServiceProvider',
+    22 => 'App\\Providers\\HorizonServiceProvider',
   ),
   'deferred' => 
   array (

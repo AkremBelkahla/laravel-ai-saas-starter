@@ -112,4 +112,11 @@
       0 => 'Spatie\\QueryBuilder\\QueryBuilderServiceProvider',
     ),
   ),
+  'tightenco/ziggy' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Tighten\\Ziggy\\ZiggyServiceProvider',
+    ),
+  ),
 );

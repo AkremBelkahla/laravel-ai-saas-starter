@@ -19,7 +19,7 @@
         "predis/predis": "^2.2",
         "spatie/laravel-permission": "^6.4",
         "spatie/laravel-query-builder": "^5.8",
-        "tightenco/ziggy": "*"
+        "tightenco/ziggy": "^2.6"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
