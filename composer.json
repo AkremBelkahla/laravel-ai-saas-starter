@@ -6,19 +6,20 @@
     "license": "MIT",
     "require": {
         "php": "^8.3",
-        "laravel/framework": "^11.0",
-        "laravel/tinker": "^2.9",
         "inertiajs/inertia-laravel": "^1.0",
         "laravel/breeze": "^2.0",
         "laravel/cashier": "^15.0",
+        "laravel/framework": "^11.0",
+        "laravel/horizon": "^5.23",
         "laravel/sanctum": "^4.0",
         "laravel/socialite": "^5.12",
-        "laravel/horizon": "^5.23",
+        "laravel/tinker": "^2.9",
+        "league/flysystem-aws-s3-v3": "^3.0",
         "openai-php/laravel": "^0.8.1",
+        "predis/predis": "^2.2",
         "spatie/laravel-permission": "^6.4",
         "spatie/laravel-query-builder": "^5.8",
-        "league/flysystem-aws-s3-v3": "^3.0",
-        "predis/predis": "^2.2"
+        "tightenco/ziggy": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
